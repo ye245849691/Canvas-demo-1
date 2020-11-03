@@ -18,37 +18,86 @@
       let ctx = canvas.getContext("2d");
       ctx.fillStyle = "black";
       let isPainting = false;
-        canvas.onmousedown = () => {
-          isPainting = true;
-        };
+      let lastPoint;
+      ctx.lineWidth=10;
+      ctx.lineCap="round"
 
-      canvas.onmousemove = (e) => {
-        
-        if (isPainting === true) {
-          ctx.beginPath();
-          ctx.arc(e.clientX, e.clientY, 3, 0, 2 * Math.PI);
-          ctx.fill();
-          ctx.stroke();
-        }
-        
-        //CSS添加DIV，过于卡顿
-        // console.log(e.clientX);
-        // console.log(e.clientY);
-        // let div = document.createElement('div');
-        // div.style.width="6px";
-        // div.style.height="6px";
-        // div.style.position="absolute";
-        // div.style.left=e.clientX+"px";
-        // div.style.top=e.clientY+"px";
-        // div.style.marginLeft="-3px";
-        // div.style.marginTop="-3px";
-        // div.style.borderRadius="50%";
-        // div.style.backgroundColor="black";
-        // canvas.appendChild(div);
-      };
-      canvas.onmouseup = () => {
+      let isTouchDevice = "ontouchstart" in document.documentElement;
+
+
+
+      if (isTouchDevice) {
+          canvas.ontouchstart=(e)=>{
+              lastPoint = [e.touches[0].clientX, e.touches[0].clientY];
+          }
+          canvas.ontouchmove=(e)=>{
+            lineMove(lastPoint[0], lastPoint[1], e.touches[0].clientX, e.touches[0].clientY);
+            lastPoint = [e.touches[0].clientX, e.touches[0].clientY];
+          }
+      } else {
+        canvas.onmousedown = (e) => {
+          isPainting = true;
+          lastPoint = [e.clientX, e.clientY];
+        };
+        canvas.onmousemove = (e) => {
+          if (isPainting) {
+            lineMove(lastPoint[0], lastPoint[1], e.clientX, e.clientY);
+            lastPoint = [e.clientX, e.clientY];
+          }
+        };
+        canvas.onmouseup = () => {
           isPainting = false;
         };
+      }
+
+      function lineMove(x1, y1, x2, y2) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+
+      //描点
+      //   if(isTouchDevice){
+      //     ontouchmove=(e)=>{
+      //         ctx.beginPath();
+      //       ctx.arc(e.touches[0].clientX,e.touches[0].clientY, 3, 0, 2 * Math.PI);
+      //       ctx.fill();
+      //       ctx.stroke();
+
+      //     }
+      //   }else{
+      //     canvas.onmousedown = () => {
+      //     isPainting = true;
+      //   };
+
+      //   canvas.onmousemove = (e) => {
+      //     if (isPainting === true) {
+      //       ctx.beginPath();
+      //       ctx.arc(e.clientX, e.clientY, 3, 0, 2 * Math.PI);
+      //       ctx.fill();
+      //       ctx.stroke();
+      //     }
+      //   };
+      //   canvas.onmouseup = () => {
+      //     isPainting = false;
+      //   };
+      //   }
+
+      //CSS添加DIV，过于卡顿
+      // console.log(e.clientX);
+      // console.log(e.clientY);
+      // let div = document.createElement('div');
+      // div.style.width="6px";
+      // div.style.height="6px";
+      // div.style.position="absolute";
+      // div.style.left=e.clientX+"px";
+      // div.style.top=e.clientY+"px";
+      // div.style.marginLeft="-3px";
+      // div.style.marginTop="-3px";
+      // div.style.borderRadius="50%";
+      // div.style.backgroundColor="black";
+      // canvas.appendChild(div);
     </script>
   </body>
 </html>
