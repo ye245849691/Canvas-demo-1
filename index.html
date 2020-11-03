@@ -1,17 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="stylesheet" href="style.css" />
     <title>Canvas</title>
-</head>
-<body>
-    <div id="canvas">Hi</div>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
     <script>
-        canvas.onclick= (e) =>{
-            console.log(e);
+      let canvas = document.getElementById("canvas");
+      canvas.width = document.documentElement.clientWidth;
+      canvas.height = document.documentElement.clientHeight;
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "black";
+      let isPainting = false;
+        canvas.onmousedown = () => {
+          isPainting = true;
+        };
+
+      canvas.onmousemove = (e) => {
+        
+        if (isPainting === true) {
+          ctx.beginPath();
+          ctx.arc(e.clientX, e.clientY, 3, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.stroke();
         }
+        
+        //CSS添加DIV，过于卡顿
+        // console.log(e.clientX);
+        // console.log(e.clientY);
+        // let div = document.createElement('div');
+        // div.style.width="6px";
+        // div.style.height="6px";
+        // div.style.position="absolute";
+        // div.style.left=e.clientX+"px";
+        // div.style.top=e.clientY+"px";
+        // div.style.marginLeft="-3px";
+        // div.style.marginTop="-3px";
+        // div.style.borderRadius="50%";
+        // div.style.backgroundColor="black";
+        // canvas.appendChild(div);
+      };
+      canvas.onmouseup = () => {
+          isPainting = false;
+        };
     </script>
-</body>
+  </body>
 </html>
